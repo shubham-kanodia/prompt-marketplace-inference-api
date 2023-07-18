@@ -6,6 +6,7 @@ from helpers.auto_encoder import AutoEncoderHelper
 from helpers.pipeline import Pipe
 
 import torch
+import pickle
 
 from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
@@ -24,7 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-device = "cuda"
+device = "cpu"
 
 text_embeddings_helper = TextEmbeddingsHelper(device)
 latents_helper = LatentsHelper(device)
@@ -42,9 +43,22 @@ async def root():
     return {"message": f"Hello from team Invictus!"}
 
 
+import base64
+
+
+def tensor_to_base64(arr):
+    bt = str(arr.tolist()).encode("utf-8")
+    encoded_bytes = base64.b64encode(bt)
+    encoded_string = encoded_bytes.decode('utf-8')
+
+    return encoded_string
+
 @app.post("/inference")
 async def inference(prompt: PromptModel):
-    imgs, semi_inp = pipeline.forward(prompt.prompt)
+    # imgs, semi_inp = pipeline.forward(prompt.prompt)
+
+    imgs = pickle.load(open("data/new-cache/imgs.pkl", "rb"))
+    semi_inp = pickle.load(open("data/new-cache/semi_inp.pkl", "rb"))
 
     return {
         "imgs": imgs.tolist(),
