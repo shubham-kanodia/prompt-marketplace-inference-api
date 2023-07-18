@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
 
-app = FastAPI(openapi_url=None)
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-device = torch.device("cpu")
+device = "cpu"
 
 text_embeddings_helper = TextEmbeddingsHelper(device)
 latents_helper = LatentsHelper(device)
@@ -46,4 +46,7 @@ async def root():
 async def inference(prompt: PromptModel):
     imgs, semi_inp = pipeline.forward(prompt.prompt)
 
-    print("Done")
+    return {
+        "imgs": imgs.tolist(),
+        "semi_inp": semi_inp.tolist()
+    }

@@ -18,7 +18,7 @@ class LatentsHelper:
             beta_schedule='scaled_linear', num_train_timesteps=1000)
 
     def produce_latents(self, text_embeddings, height=512, width=512,
-                        num_inference_steps=1, guidance_scale=7.5, latents=None):
+                        num_inference_steps=50, guidance_scale=7.5, latents=None):
         if latents is None:
             latents = torch.randn((text_embeddings.shape[0] // 2, self.unet.in_channels, height // 8, width // 8))
         latents = latents.to(self.device)
