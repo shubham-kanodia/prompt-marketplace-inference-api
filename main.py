@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-device = "cpu"
+device = "cuda"
 
 text_embeddings_helper = TextEmbeddingsHelper(device)
 latents_helper = LatentsHelper(device)
